@@ -18,6 +18,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
+app.use("/assets", express.static(path.join(__dirname, "../assets")));
 app.use(loginAuthIfEnabled);
 
 app.get("/login", (req, res) => {
@@ -163,9 +164,14 @@ app.use((error, _req, res, _next) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Diamondleaf pricing app running at http://localhost:${port}`);
-});
+// Local development only — Vercel invokes the exported app directly
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Diamondleaf pricing app running at http://localhost:${port}`);
+  });
+}
+
+export default app;
 
 function loginAuthIfEnabled(req, res, next) {
   const password = process.env.APP_PASSWORD;
