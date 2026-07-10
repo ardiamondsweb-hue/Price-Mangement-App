@@ -1,0 +1,152 @@
+<%- include("partials/header") %>
+<section class="topbar-card">
+  <div>
+    <p class="eyebrow">Price Manager</p>
+    <h1>Daily price update dashboard</h1>
+    <p class="lead">Save today’s rates, then update all Shopify product prices using the same calculation logic.</p>
+  </div>
+  <div class="topbar-card__meta">
+    <div><span>Store</span><strong><%= shop.name %></strong></div>
+    <div><span>Plan</span><strong><%= shop.plan.displayName %></strong></div>
+    <div><span>Currency</span><strong><%= config.currencyCode || shop.currencyCode %></strong></div>
+    <% if (passwordProtected) { %>
+      <form method="post" action="/logout">
+        <button class="button button-secondary" type="submit">Logout</button>
+      </form>
+    <% } %>
+  </div>
+</section>
+
+<% if (saved) { %>
+  <div class="notice success">Settings saved successfully.</div>
+<% } %>
+<% if (ratesSaved) { %>
+  <div class="notice success">Daily rates saved successfully. You can now run repricing.</div>
+<% } %>
+
+<section class="stack-layout">
+  <article class="panel">
+    <h2>Daily manual rates</h2>
+    <p class="hint">Enter today’s values and save them before you update Shopify prices.</p>
+    <form method="post" action="/daily-rates" class="stack" data-loading-form>
+      <div class="simple-grid">
+        <label>
+          <span>Gold rate 9K</span>
+          <input type="number" step="0.01" name="goldRate9" value="<%= config.goldRates['9'] %>" />
+        </label>
+        <label>
+          <span>Gold rate 14K</span>
+          <input type="number" step="0.01" name="goldRate14" value="<%= config.goldRates['14'] %>" />
+        </label>
+        <label>
+          <span>Gold rate 18K</span>
+          <input type="number" step="0.01" name="goldRate18" value="<%= config.goldRates['18'] %>" />
+        </label>
+        <label>
+          <span>Gold rate 22K</span>
+          <input type="number" step="0.01" name="goldRate22" value="<%= config.goldRates['22'] %>" />
+        </label>
+        <label>
+          <span>Gold rate 24K</span>
+          <input type="number" step="0.01" name="goldRate24" value="<%= config.goldRates['24'] %>" />
+        </label>
+        <label>
+          <span>Natural diamond flat price/ct</span>
+          <input type="number" step="0.01" name="defaultNaturalDiamondFlatPricePerCt" value="<%= config.defaultNaturalDiamondFlatPricePerCt %>" />
+        </label>
+        <label>
+          <span>Default stone price/ct</span>
+          <input type="number" step="0.01" name="defaultStonePricePerCt" value="<%= config.defaultStonePricePerCt %>" />
+        </label>
+        <label>
+          <span>GST %</span>
+          <input type="number" step="0.01" name="gstPercent" value="<%= config.gstPercent %>" />
+        </label>
+        <label>
+          <span>Default making %</span>
+          <input type="number" step="0.01" name="defaultMakingPercent" value="<%= config.defaultMakingPercent %>" />
+        </label>
+      </div>
+      <div class="subpanel">
+        <h3>Lab grown slabs</h3>
+        <div class="simple-grid">
+          <label><span>0 to 0.5 ct</span><input type="number" step="0.01" name="labRate0to05" value="<%= config.labDiamondSlabs[0]?.rate %>" /></label>
+          <label><span>0.5 to 1 ct</span><input type="number" step="0.01" name="labRate05to1" value="<%= config.labDiamondSlabs[1]?.rate %>" /></label>
+          <label><span>1 to 1.5 ct</span><input type="number" step="0.01" name="labRate1to15" value="<%= config.labDiamondSlabs[2]?.rate %>" /></label>
+          <label><span>1.5 to 2 ct</span><input type="number" step="0.01" name="labRate15to2" value="<%= config.labDiamondSlabs[3]?.rate %>" /></label>
+          <label><span>2 to 3 ct</span><input type="number" step="0.01" name="labRate2to3" value="<%= config.labDiamondSlabs[4]?.rate %>" /></label>
+          <label><span>3 ct and above</span><input type="number" step="0.01" name="labRate3Above" value="<%= config.labDiamondSlabs[5]?.rate %>" /></label>
+        </div>
+      </div>
+      <% if (config.lastManualUpdateAt) { %>
+        <p class="hint">Last updated: <%= config.lastManualUpdateAt %></p>
+      <% } %>
+      <button class="button button-dark" type="submit" data-loading-button>
+        <span data-idle-label>Save rates</span>
+        <span data-loading-label hidden>Saving rates...</span>
+      </button>
+    </form>
+  </article>
+
+  <article class="panel">
+    <h2>Update all product prices</h2>
+    <p class="hint">Save rates first, then update all products in Shopify using the formula below.</p>
+    <div class="formula-box">
+      <p><strong>Formula:</strong> <code>FP = G1 + ND + SL + LD + SRD + SFD + SI + M</code></p>
+      <p><strong>Grand Total:</strong> <code>FP + 3% GST</code> (or configured GST %)</p>
+      <p class="hint">Components are dynamically skipped if their values or weights are empty or 0.</p>
+    </div>
+    <form method="post" action="/reprice" data-loading-form>
+      <button class="button button-gold button-wide" type="submit" data-loading-button>
+        <span data-idle-label>Update all prices now</span>
+        <span data-loading-label hidden>Updating prices...</span>
+      </button>
+    </form>
+  </article>
+
+  <article class="panel">
+    <h2>Quick reference</h2>
+    <p class="hint">Main product metafields that should be filled in Shopify.</p>
+    <table class="table-compact">
+      <thead>
+        <tr>
+          <th>Metafield</th>
+          <th>What to enter</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code><%= config.metafields.keys.goldWeightGm %></code></td><td>Weight of gold in grams (G1 weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.goldPurity %></code></td><td>Gold purity like 9, 14, 18, 22, 24</td></tr>
+        <tr><td><code><%= config.metafields.keys.totalDiamondWeight %></code></td><td>Total diamond weight in carat (ND / LD weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.numberOfDiamond %></code></td><td>Number of diamonds (to calculate average weight for LD)</td></tr>
+        <tr><td><code><%= config.metafields.keys.soliterWeight %></code></td><td>Total weight of Solitaire diamonds (SL weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.numberOfSoliter %></code></td><td>Number of Solitaire diamonds (to calculate average weight for SL)</td></tr>
+        <tr><td><code><%= config.metafields.keys.smallRoundWeight %></code></td><td>Total weight of Small Round diamonds (SRD weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.numberOfSmallRound %></code></td><td>Number of Small Round diamonds (to calculate average weight for SRD)</td></tr>
+        <tr><td><code><%= config.metafields.keys.smallFancyWeight %></code></td><td>Total weight of Small Fancy diamonds (SFD weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.numberOfSmallFancy %></code></td><td>Number of Small Fancy diamonds (to calculate average weight for SFD)</td></tr>
+        <tr><td><code><%= config.metafields.keys.stonePricePerCt %></code></td><td>Stone rate per carat (SI rate)</td></tr>
+        <tr><td><code><%= config.metafields.keys.stoneTotalWt %></code></td><td>Total stone weight in carat (SI weight)</td></tr>
+        <tr><td><code><%= config.metafields.keys.diamondType %></code></td><td>Natural or Lab Grown</td></tr>
+      </tbody>
+    </table>
+  </article>
+</section>
+<script>
+  for (const form of document.querySelectorAll("[data-loading-form]")) {
+    form.addEventListener("submit", () => {
+      const button = form.querySelector("[data-loading-button]");
+      const idleLabel = form.querySelector("[data-idle-label]");
+      const loadingLabel = form.querySelector("[data-loading-label]");
+
+      if (!button) return;
+
+      button.disabled = true;
+      button.classList.add("is-loading");
+
+      if (idleLabel) idleLabel.hidden = true;
+      if (loadingLabel) loadingLabel.hidden = false;
+    });
+  }
+</script>
+<%- include("partials/footer") %>

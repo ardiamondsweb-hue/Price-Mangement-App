@@ -1,0 +1,45 @@
+<%- include("partials/header") %>
+<%
+  const updatedCount = results.filter((row) => row.status === "updated").length;
+  const unchangedCount = results.filter((row) => row.status === "unchanged").length;
+  const skippedCount = results.filter((row) => row.status === "skipped").length;
+  const errorCount = results.filter((row) => row.status === "error").length;
+  const totalCount = results.length;
+%>
+<section class="stack-layout">
+  <article class="panel">
+    <div class="result-head">
+      <div>
+        <p class="eyebrow">Sync complete</p>
+        <h1>Product price update result</h1>
+        <p class="lead">Your repricing run has finished. Review the summary and product log below.</p>
+      </div>
+      <a class="button button-secondary" href="/">Back to dashboard</a>
+    </div>
+
+    <div class="summary-strip">
+      <div><strong><%= updatedCount %></strong><span>updated</span></div>
+      <div><strong><%= unchangedCount %></strong><span>unchanged</span></div>
+      <div><strong><%= skippedCount %></strong><span>skipped</span></div>
+      <div><strong><%= errorCount %></strong><span>errors</span></div>
+      <div><strong><%= totalCount %></strong><span>total</span></div>
+    </div>
+
+    <div class="log-console">
+      <p>Loading current pricing configuration...</p>
+      <p>Fetching products from Shopify...</p>
+      <% for (const row of results) { %>
+        <% if (row.status === 'updated') { %>
+          <p class="log-ok">✓ <%= row.productTitle %> <% if (row.diamondKind === 'lab-grown') { %><span class="badge lab-grown">Lab Grown</span><% } %> - Updated to <%= row.totalPrice %> (<%= row.formula %>)</p>
+        <% } else if (row.status === 'unchanged') { %>
+          <p class="log-unchanged">○ <%= row.productTitle %> <% if (row.diamondKind === 'lab-grown') { %><span class="badge lab-grown">Lab Grown</span><% } %> - Unchanged/Synchronized at <%= row.totalPrice %> (<%= row.formula %>)</p>
+        <% } else if (row.status === 'skipped') { %>
+          <p class="log-skipped">⚠ <%= row.productTitle %> - Skipped: <%= row.reason %></p>
+        <% } else { %>
+          <p class="log-error">× <%= row.productTitle %> - Error: <%= row.error %></p>
+        <% } %>
+      <% } %>
+    </div>
+  </article>
+</section>
+<%- include("partials/footer") %>
