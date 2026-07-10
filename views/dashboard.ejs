@@ -107,29 +107,31 @@
   <article class="panel">
     <h2>Quick reference</h2>
     <p class="hint">Main product metafields that should be filled in Shopify.</p>
-    <table class="table-compact">
-      <thead>
-        <tr>
-          <th>Metafield</th>
-          <th>What to enter</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><code><%= config.metafields.keys.goldWeightGm %></code></td><td>Weight of gold in grams (G1 weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.goldPurity %></code></td><td>Gold purity like 9, 14, 18, 22, 24</td></tr>
-        <tr><td><code><%= config.metafields.keys.totalDiamondWeight %></code></td><td>Total diamond weight in carat (ND / LD weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.numberOfDiamond %></code></td><td>Number of diamonds (to calculate average weight for LD)</td></tr>
-        <tr><td><code><%= config.metafields.keys.soliterWeight %></code></td><td>Total weight of Solitaire diamonds (SL weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.numberOfSoliter %></code></td><td>Number of Solitaire diamonds (to calculate average weight for SL)</td></tr>
-        <tr><td><code><%= config.metafields.keys.smallRoundWeight %></code></td><td>Total weight of Small Round diamonds (SRD weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.numberOfSmallRound %></code></td><td>Number of Small Round diamonds (to calculate average weight for SRD)</td></tr>
-        <tr><td><code><%= config.metafields.keys.smallFancyWeight %></code></td><td>Total weight of Small Fancy diamonds (SFD weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.numberOfSmallFancy %></code></td><td>Number of Small Fancy diamonds (to calculate average weight for SFD)</td></tr>
-        <tr><td><code><%= config.metafields.keys.stonePricePerCt %></code></td><td>Stone rate per carat (SI rate)</td></tr>
-        <tr><td><code><%= config.metafields.keys.stoneTotalWt %></code></td><td>Total stone weight in carat (SI weight)</td></tr>
-        <tr><td><code><%= config.metafields.keys.diamondType %></code></td><td>Natural or Lab Grown</td></tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class="table-compact">
+        <thead>
+          <tr>
+            <th>Metafield</th>
+            <th>What to enter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code><%= config.metafields.keys.goldWeightGm %></code></td><td>Weight of gold in grams (G1 weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.goldPurity %></code></td><td>Gold purity like 9, 14, 18, 22, 24</td></tr>
+          <tr><td><code><%= config.metafields.keys.totalDiamondWeight %></code></td><td>Total diamond weight in carat (ND / LD weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.numberOfDiamond %></code></td><td>Number of diamonds (to calculate average weight for LD)</td></tr>
+          <tr><td><code><%= config.metafields.keys.soliterWeight %></code></td><td>Total weight of Solitaire diamonds (SL weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.numberOfSoliter %></code></td><td>Number of Solitaire diamonds (to calculate average weight for SL)</td></tr>
+          <tr><td><code><%= config.metafields.keys.smallRoundWeight %></code></td><td>Total weight of Small Round diamonds (SRD weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.numberOfSmallRound %></code></td><td>Number of Small Round diamonds (to calculate average weight for SRD)</td></tr>
+          <tr><td><code><%= config.metafields.keys.smallFancyWeight %></code></td><td>Total weight of Small Fancy diamonds (SFD weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.numberOfSmallFancy %></code></td><td>Number of Small Fancy diamonds (to calculate average weight for SFD)</td></tr>
+          <tr><td><code><%= config.metafields.keys.stonePricePerCt %></code></td><td>Stone rate per carat (SI rate)</td></tr>
+          <tr><td><code><%= config.metafields.keys.stoneTotalWt %></code></td><td>Total stone weight in carat (SI weight)</td></tr>
+          <tr><td><code><%= config.metafields.keys.diamondType %></code></td><td>Natural or Lab Grown</td></tr>
+        </tbody>
+      </table>
+    </div>
   </article>
 </section>
 <script>
